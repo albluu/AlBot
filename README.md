@@ -1,8 +1,10 @@
 # AlBot
 Discord bot for personal use
 
-### Features
+## Prerequisites
+[discord.py](https://github.com/Rapptz/discord.py)
 
+### Features
 Command | Function
 -|-
 $hello | Responds with Hello
