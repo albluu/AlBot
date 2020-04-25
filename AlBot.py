@@ -1,4 +1,5 @@
 import discord
+import random
 
 client = discord.Client()
 
@@ -7,19 +8,32 @@ tokenFile = open('token.txt')
 token = tokenFile.read()
 tokenFile.close()
 
+# Loads help dialog from commands.txt
+commandsFile = open('commands.txt')
+commands = commandsFile.read()
+commandsFile.close()
+
 @client.event
 async def on_ready():
     print('We have logged in as {0.user}'.format(client))
 
 @client.event
 async def on_message(message):
-    if message.author == client.user:
+    if message.author == client.user or message.author.bot:
         return
-
+    # Command List
+    # Command: $help
+    if message.content.startswith('$help'):
+        await message.channel.send(commands)
+    # Hello World
+    # Command: $hello
     if message.content.startswith('$hello'):
-        await message.channel.send('Hello!')
+        await message.channel.send('Hello World!')
+
+    # Move people in current voice channel to new channel 
+    # Command: $move <Voice Channel>
     if message.content.startswith('$move'):
-        msgAuth = discord.utils.get(message.guild.members, name = message.author.name)
+        msgAuth = message.author
         if not msgAuth.voice:
             await message.channel.send("You're not in a voice channel.")
             return
@@ -35,4 +49,18 @@ async def on_message(message):
         for mem in chMembs:
             await mem.move_to(newChan)
 
+    # Split users in current voice channel into teams
+    # Command: $team
+    if message.content.startswith('$team'):
+        msgAuth = discord.utils.get(message.guild.members, name = message.author.name)
+        if not msgAuth.voice:
+            await message.channel.send("You're not in a voice channel.")
+            return
+        chMembs = msgAuth.voice.channel.members
+        random.shuffle(chMembs)
+        memName = [m.mention for m in chMembs]
+        teamA = memName[len(memName) // 2:]
+        teamB = memName[:len(memName) // 2]
+        await message.channel.send('Team 1: ' + ' '.join(teamA))
+        await message.channel.send('Team 2: ' + ' '.join(teamB))
 client.run(token)

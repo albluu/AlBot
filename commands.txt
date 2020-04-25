@@ -1,0 +1,7 @@
+Commands:
+```
+$help       This help dialog
+$hello      Returns "Hello World!"
+$move <vc>  (case sensitive) Moves everyone in current voice channel to new channel
+$team       Splits voice channel members into two teams
+```
