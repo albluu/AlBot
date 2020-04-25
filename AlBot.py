@@ -63,4 +63,13 @@ async def on_message(message):
         teamB = memName[:len(memName) // 2]
         await message.channel.send('Team 1: ' + ' '.join(teamA))
         await message.channel.send('Team 2: ' + ' '.join(teamB))
+    
+    # Link to r6s stats page
+    #command $r6s <username>
+    if message.content.startswith('$r6s'):
+        msgSpl = message.content.split(' ', 1)
+        if len(msgSpl) == 1:
+            await message.channel.send("Specify user to look up")
+            return
+        await message.channel.send("https://r6stats.com/search/" + msgSpl[1] + '/pc')
 client.run(token)

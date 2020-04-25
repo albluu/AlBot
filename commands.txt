@@ -3,5 +3,6 @@ Commands:
 $help       This help dialog
 $hello      Returns "Hello World!"
 $move <vc>  (case sensitive) Moves everyone in current voice channel to new channel
+$r6s <user> Returns a link to r6stats search page for given username
 $team       Splits voice channel members into two teams
 ```
