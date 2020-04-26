@@ -21,10 +21,12 @@ async def on_ready():
 async def on_message(message):
     if message.author == client.user or message.author.bot:
         return
+
     # Command List
     # Command: $help
     if message.content.startswith('$help'):
         await message.channel.send(commands)
+
     # Hello World
     # Command: $hello
     if message.content.startswith('$hello'):
@@ -68,11 +70,27 @@ async def on_message(message):
         await message.channel.send('Team 2: ' + ' '.join(teamB))
     
     # Link to r6s stats page
-    #command $r6s <username>
+    # Command: $r6s <username>
     if message.content.startswith('$r6s'):
         msgSpl = message.content.split(' ', 1)
         if len(msgSpl) == 1:
             await message.channel.send("Specify user to look up")
             return
         await message.channel.send("https://r6stats.com/search/" + msgSpl[1] + '/pc')
+    
+    # Random number generator
+    # command: $roll <n>
+    if message.content.startswith('$roll'):
+        msgSpl = message.content.split(' ')
+        if len(msgSpl) == 1:
+            await message.channel.send("Specify a number.")
+            return
+        if not msgSpl[1].isdigit():
+            await message.channel.send("Not a valid number.")
+            return
+        maxsize = int(msgSpl[1])
+        if maxsize == 0:
+            await message.channel.send("Not a valid number.")
+            return
+        await message.channel.send('Rolled a {0}.'.format(random.randint(1,maxsize)))
 client.run(token)
