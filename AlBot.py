@@ -34,6 +34,9 @@ async def on_message(message):
     # Command: $move <Voice Channel>
     if message.content.startswith('$move'):
         msgAuth = message.author
+        if not msgAuth.guild_permissions.move_members:
+            await message.channel.send("You don't have permission to move people.")
+            return
         if not msgAuth.voice:
             await message.channel.send("You're not in a voice channel.")
             return
