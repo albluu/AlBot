@@ -4,7 +4,7 @@ import random
 
 class Simple(commands.Cog):
     """Simple features that everyone can use"""
-    
+
     def __init__(self, bot: commands.Bot):
         self.bot = bot
 
@@ -37,5 +37,6 @@ class Simple(commands.Cog):
             await ctx.send("Not a valid number.")
             return
         await ctx.send('Rolled a {0}.'.format(random.randint(1,maxsize)))
+
 def setup(bot: commands.Bot):
     bot.add_cog(Simple(bot))

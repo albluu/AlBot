@@ -12,6 +12,7 @@ bot = commands.Bot(
     case_insensitive=True
 )
 
+bot.load_extension('cogs.BotManagement')
 bot.load_extension('cogs.Simple')
 bot.load_extension('cogs.VoiceManagement')
 

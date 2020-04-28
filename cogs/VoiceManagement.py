@@ -72,5 +72,12 @@ class VoiceManagement(commands.Cog):
         for mem in chMembs:
             await mem.move_to(newChan)
 
+    @commands.command()
+    async def eject(self, ctx):
+        """Leave the voice channel, in style."""
+        if ctx.author.voice:
+            await ctx.send(':crab: {0} is gone :crab:'.format(ctx.author.mention))
+            await ctx.author.move_to(None)
+
 def setup(bot: commands.Bot):
     bot.add_cog(VoiceManagement(bot))
