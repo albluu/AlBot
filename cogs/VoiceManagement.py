@@ -1,7 +1,7 @@
 import discord
 from discord.ext import commands
 import random
-
+import Checks
 
 class VoiceManagement(commands.Cog):
     """Contains features for managing users in voice channels"""
@@ -9,36 +9,27 @@ class VoiceManagement(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
     
+    async def cog_command_error(self, ctx, error):
+        await ctx.send(error)
+
     @commands.command()
-    async def move(self, ctx):
+    @Checks.in_voice()
+    @commands.has_permissions(move_members = True)
+    async def move(self, ctx, *, channel: str):
         """Moves users to a new voice channel (case sensitive)"""
-        msgAuth = ctx.author
-        if not msgAuth.guild_permissions.move_members:
-            await ctx.send("You don't have permission to move people.")
-            return
-        if not msgAuth.voice:
-            await ctx.send("You're not in a voice channel.")
-            return
-        msgSpl = ctx.message.content.split(' ', 1)
-        if len(msgSpl) == 1:
-            await ctx.send("Specify a channel to switch to.")
-            return
-        newChan = discord.utils.get(ctx.guild.voice_channels, name = msgSpl[1])
+        newChan = discord.utils.get(ctx.guild.voice_channels, name = channel)
         if newChan is None:
             await ctx.send("That channel doesn't exist.")
             return
-        chMembs = msgAuth.voice.channel.members
+        chMembs = ctx.author.voice.channel.members
         for mem in chMembs:
             await mem.move_to(newChan)
     
     @commands.command()
+    @Checks.in_voice()
     async def team(self, ctx):
         """Generates two teams based on members in the current voice channel"""
-        msgAuth = ctx.author
-        if not msgAuth.voice:
-            await ctx.send("You're not in a voice channel.")
-            return
-        chMembs = msgAuth.voice.channel.members
+        chMembs = ctx.author.voice.channel.members
         random.shuffle(chMembs)
         memName = [m.mention for m in chMembs]
         teamA = memName[len(memName) // 2:]
@@ -47,20 +38,11 @@ class VoiceManagement(commands.Cog):
         await ctx.send('Team 2: ' + ' '.join(teamB))
 
     @commands.command()
-    async def group(self, ctx):
+    @Checks.in_voice()
+    @commands.has_permissions(move_members = True)
+    async def group(self, ctx, *, channel: str):
         """Pulls all users in voice channels into a specified channel"""
-        msgAuth = ctx.author
-        if not msgAuth.guild_permissions.move_members:
-            await ctx.send("You don't have permission to move people.")
-            return
-        if not msgAuth.voice:
-            await ctx.send("You're not in a voice channel.")
-            return
-        msgSpl = ctx.message.content.split(' ', 1)
-        if len(msgSpl) == 1:
-            await ctx.send("Specify a channel to group into.")
-            return
-        newChan = discord.utils.get(ctx.guild.voice_channels, name = msgSpl[1])
+        newChan = discord.utils.get(ctx.guild.voice_channels, name = channel)
         if newChan is None:
             await ctx.send("That channel doesn't exist.")
             return
@@ -75,7 +57,7 @@ class VoiceManagement(commands.Cog):
     @commands.command()
     async def eject(self, ctx):
         """Leave the voice channel, in style."""
-        if ctx.author.voice:
+        if ctx.author.voice: # Intentionally not using checks to silently handle when not in vc
             await ctx.send(':crab: {0} is gone :crab:'.format(ctx.author.mention))
             await ctx.author.move_to(None)
 

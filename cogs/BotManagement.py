@@ -23,5 +23,11 @@ class BotManagement(commands.Cog):
         await ctx.send('Stopping extension {0}'.format(ext))
         self.bot.unload_extension(ext)
 
+    @commands.command(hidden = True)
+    @commands.is_owner()
+    async def shutdownbot(self, ctx):
+        await ctx.send('Shutting down the bot.')
+        await self.bot.logout()
+
 def setup(bot: commands.Bot):
     bot.add_cog(BotManagement(bot))
