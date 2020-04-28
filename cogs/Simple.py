@@ -5,38 +5,37 @@ import random
 class Simple(commands.Cog):
     """Simple features that everyone can use"""
 
-    def __init__(self, bot: commands.Bot):
+    def __init__(self, bot):
         self.bot = bot
 
     @commands.command()
-    async def hello(self, ctx: commands.Context):
+    async def hello(self, ctx):
         """Responds with \"Hello World!\""""
         await ctx.send('Hello World!')
 
     @commands.command()
-    async def r6s(self, ctx: commands.Context):
+    async def r6s(self, ctx, *, username):
         """Generates a search for a given user on R6Stats"""
-        msgSpl = ctx.message.content.split(' ', 1)
-        if len(msgSpl) == 1:
-            await ctx.send("Specify user to look up")
-            return
-        await ctx.send("https://r6stats.com/search/" + msgSpl[1] + '/pc')
+        await ctx.send("https://r6stats.com/search/" + username + '/pc')
+
+    @r6s.error
+    async def r6s_error(self, ctx, error):
+        if isinstance(error, commands.MissingRequiredArgument):
+            await ctx.send("Specify user to look up.")
 
     @commands.command()
-    async def roll(self, ctx: commands.Context):
+    async def roll(self, ctx, number: int):
         """Returns a random number from 1 to a given number."""
-        msgSpl = ctx.message.content.split(' ')
-        if len(msgSpl) == 1:
-            await ctx.send("Specify a number.")
-            return
-        if not msgSpl[1].isdigit():
-            await ctx.send("Not a valid number.")
-            return
-        maxsize = int(msgSpl[1])
-        if maxsize == 0:
-            await ctx.send("Not a valid number.")
-            return
-        await ctx.send('Rolled a {0}.'.format(random.randint(1,maxsize)))
+        if number < 1:
+            raise commands.BadArgument
+        await ctx.send('Rolled a {0}.'.format(random.randint(1,number)))
+
+    @roll.error
+    async def roll_error(self, ctx, error):
+        if isinstance(error, commands.MissingRequiredArgument):
+            await ctx.send('Specify a number.')
+        elif isinstance(error, commands.BadArgument):
+            await ctx.send('Provide a number greater than 0.')
 
 def setup(bot: commands.Bot):
     bot.add_cog(Simple(bot))

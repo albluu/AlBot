@@ -13,7 +13,8 @@ bot = commands.Bot(
 )
 
 bot.load_extension('cogs.BotManagement')
-bot.load_extension('cogs.Simple')
+#bot.load_extension('cogs.Simple')
 bot.load_extension('cogs.VoiceManagement')
 
 bot.run(token)
+print('Bot is running')
