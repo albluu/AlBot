@@ -12,7 +12,7 @@ class VoiceManagement(commands.Cog):
     async def cog_command_error(self, ctx, error):
         await ctx.send(error)
 
-    @commands.command()
+    @commands.command(aliases=['cc'])
     @Checks.in_voice()
     @commands.has_permissions(move_members = True)
     async def move(self, ctx, *, channel: str):
