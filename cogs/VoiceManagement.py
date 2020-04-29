@@ -14,7 +14,7 @@ class VoiceManagement(commands.Cog):
 
     @commands.command(aliases=['cc'])
     @Checks.in_voice()
-    @commands.has_permissions(move_members = True)
+    @commands.has_guild_permissions(move_members = True)
     async def move(self, ctx, *, channel: str):
         """Moves users to a new voice channel (case sensitive)"""
         newChan = discord.utils.get(ctx.guild.voice_channels, name = channel)
@@ -39,7 +39,7 @@ class VoiceManagement(commands.Cog):
 
     @commands.command()
     @Checks.in_voice()
-    @commands.has_permissions(move_members = True)
+    @commands.has_guild_permissions(move_members = True)
     async def group(self, ctx, *, channel: str):
         """Pulls all users in voice channels into a specified channel"""
         newChan = discord.utils.get(ctx.guild.voice_channels, name = channel)
